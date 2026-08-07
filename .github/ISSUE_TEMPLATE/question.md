@@ -1,10 +1,9 @@
 ---
-name: 问题咨询
-about: 提出针对本项目安装部署、使用及其他方面的相关问题
+name: Question
+about: Ask questions related to installing, deploying, using, or other aspects of this project
 title: "[Question] "
-labels: 类型:提问
-assignees: wojiushixiaobai
+labels: type:question
 
 ---
 
-**请描述您的问题.**
+**Please describe your question.**

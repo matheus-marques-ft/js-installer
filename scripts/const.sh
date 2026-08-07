@@ -9,7 +9,7 @@ if [[ ! "$(echo $PATH | grep /usr/local/bin)" ]]; then
   export PATH=/usr/local/bin:$PATH
 fi
 
-# 国际化处理
+# i18n handling
 export TEXTDOMAINDIR=$PROJECT_DIR/locale
 export TEXTDOMAIN=jumpserver-installer
 
@@ -17,7 +17,7 @@ export CONFIG_DIR="${JS_CONFIG_DIR:-/opt/jumpserver/config}"
 export CONFIG_FILE=$CONFIG_DIR/config.txt
 export CONFIG_SAFE_FILE=$CONFIG_DIR/config_safe.txt
 
-# Compose 项目设置
+# Compose project settings
 export COMPOSE_PROJECT_NAME=jms
 # export COMPOSE_HTTP_TIMEOUT=3600
 # export DOCKER_CLIENT_TIMEOUT=3600

@@ -130,7 +130,7 @@ function config_docker() {
 }
 
 function set_network() {
-  # IPv6 支持
+  # IPv6 support
   use_ipv6=$(get_config USE_IPV6)
   confirm="n"
   if [[ "${use_ipv6}" == "1" ]]; then

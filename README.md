@@ -1,73 +1,76 @@
 # JumpServer Installer
 
-JumpServer Installer 用来安装和管理 JumpServer。
+JumpServer Installer is used to install and manage JumpServer.
 
-## 环境依赖
+## Requirements
   - Linux x86_64
-  - Kernel 大于 4.0
+  - Kernel greater than 4.0
 
-## 安装部署
+## Installation
 
 ```bash
-# 安装，版本是在 static.env 指定的
+# Install, version is specified in static.env
 $ ./jmsctl.sh install
 ```
 
-## 管理命令
+## Management Commands
 
 ```
-# 启动
+# Start
 $ ./jmsctl.sh start
 
-# 重启
+# Restart
 $ ./jmsctl.sh restart
 
-# 关闭, 不包含数据库
+# Stop (does not include the database)
 $ ./jmsctl.sh stop
 
-# 关闭所有
+# Stop everything
 $ ./jmsctl.sh down
 
-# 备份数据库
+# Backup the database
 $ ./jmsctl.sh backup_db
 
-# 查看日志
+# View logs
 $ ./jmsctl.sh tail
 
 ```
 
-## KOTL（企业版）
+## KOTL (Enterprise Edition)
 
-KOTL 是企业版组件，需要在 `/opt/jumpserver/config/config.txt` 中设置
-`USE_XPACK=1`。它作为宿主机 systemd 服务安装，不加入 Docker Compose；企业版中
-默认启用，如需关闭可设置：
+KOTL is an Enterprise Edition component and requires setting
+`USE_XPACK=1` in `/opt/jumpserver/config/config.txt`. It is installed as a
+host systemd service and is not added to Docker Compose; it is enabled by
+default in the Enterprise Edition, and can be disabled with:
 
 ```bash
 KOTL_ENABLED=0
 ```
 
-安装器会拉取 `${NAMESPACE:-jumpserver}/kotl:${VERSION}` artifact 镜像，从
-`/dist` 提取并执行 KOTL 自带的 `scripts/install.sh` 或 `scripts/upgrade.sh`。
-离线包也会自动包含该镜像。服务跟随 `jmsctl.sh start/stop/restart/status`
-管理，日志可通过 `./jmsctl.sh tail kotl` 查看。启用时还会自动为 Core 配置
-`KOTL_ENABLED=1`、`JDMC_ENABLED=1` 和 `/opt/jumpserver/data/unshare/kotl.sock`。
+The installer pulls the `${NAMESPACE:-jumpserver}/kotl:${VERSION}` artifact
+image, extracts it from `/dist`, and runs KOTL's own `scripts/install.sh` or
+`scripts/upgrade.sh`. The offline package also automatically includes this
+image. The service is managed via `jmsctl.sh start/stop/restart/status`, and
+logs can be viewed with `./jmsctl.sh tail kotl`. When enabled, it also
+automatically configures `KOTL_ENABLED=1`, `JDMC_ENABLED=1`, and
+`/opt/jumpserver/data/unshare/kotl.sock` for Core.
 
-当前 KOTL 的宿主机路径固定使用 `/data/jumpserver`，因此启用时
-`VOLUME_DIR` 也必须保持为 `/data/jumpserver`。
+KOTL currently uses a fixed host path of `/data/jumpserver`, so `VOLUME_DIR`
+must also remain `/data/jumpserver` when it is enabled.
 
-## 配置文件说明
+## Configuration Files
 
-配置文件将会放在 /opt/jumpserver/config 中
+Configuration files are placed in /opt/jumpserver/config
 
 ```
 [root@localhost config]# tree .
 .
-├── config.txt       # 主配置文件
+├── config.txt       # main configuration file
 ├── mysql
-│   └── my.cnf       # mysql 配置文件
+│   └── my.cnf       # mysql configuration file
 |── mariadb
-|   └── mariadb.cnf  # mariadb 配置文件
-├── nginx            # nginx 配置文件
+|   └── mariadb.cnf  # mariadb configuration file
+├── nginx            # nginx configuration files
 │   ├── cert
 │   │   ├── server.crt
 │   │   └── server.key
@@ -75,13 +78,15 @@ KOTL_ENABLED=0
 │   └── lb_ssh_server.conf
 ├── README.md
 └── redis
-    └── redis.conf  # redis 配置文件
+    └── redis.conf  # redis configuration file
 
 6 directories, 11 files
 ```
 
-### config.txt 说明
+### About config.txt
 
-config.txt 文件是环境变量配置文件，会挂在到各个容器中，这样可以不必为 koko，core，lion 单独设置配置文件。
+The config.txt file is an environment variable configuration file that is
+mounted into each container, so you don't need to set configuration
+separately for koko, core, lion, etc.
 
-具体可以参考： [JumpServer 参数说明文档](https://docs.jumpserver.org/zh/master/admin-guide/env/)
+See: [JumpServer configuration reference](https://docs.jumpserver.org/zh/master/admin-guide/env/)

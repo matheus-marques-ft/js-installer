@@ -125,7 +125,7 @@ function migrate_config_v1_5_to_v2_0() {
     mkdir -p "${CONFIG_DIR}"
 
     # v1.5 => v2.0
-    # 原先配置文件都在自己的目录，以后配置文件统一放在 /opt/jumpserver/config 中
+    # Configuration files used to live in their own directories; from now on they all live under /opt/jumpserver/config
     if [[ -f config.txt ]]; then
       mv config.txt "${CONFIG_FILE}"
       rm -f .env

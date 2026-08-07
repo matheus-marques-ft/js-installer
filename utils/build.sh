@@ -1,13 +1,13 @@
 #!/bin/bash -i
 #
-# 该build基于registry.fit2cloud.com/public/python:3
+# This build runs on registry.fit2cloud.com/public/python:3
 utils_dir=$(pwd)
 project_dir=$(dirname "$utils_dir")
 release_dir=${project_dir}/release
 
-# 打开alias
+# Enable alias
 shopt -s expand_aliases
-# 打包
+# Package
 cd "${project_dir}" || exit 3
 rm -rf "${release_dir:?}"/*
 to_dir="${release_dir}/jumpserver-installer"
@@ -28,7 +28,7 @@ else
   alias sedi='sed -i'
 fi
 
-# 修改版本号文件
+# Update the version file
 if [[ -n ${VERSION} ]]; then
   sedi "s@VERSION=.*@VERSION=\"${VERSION}\"@g" "${to_dir}/static.env"
 fi

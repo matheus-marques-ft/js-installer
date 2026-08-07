@@ -7,7 +7,7 @@ on:
 name: Create Release And Upload assets
 
 jobs:
-  create-release: # 修正了拼写错误
+  create-release:
     name: Create Release
     runs-on: ubuntu-latest
     outputs:
@@ -20,7 +20,9 @@ jobs:
         id: get_version
         run: |
           TAG=$(basename ${GITHUB_REF})
+          REPO_NAME=$(basename ${GITHUB_REPOSITORY})
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
@@ -34,11 +36,12 @@ jobs:
       
       - name: Create Upload Assets
         run: |
-          mkdir -p build jumpserver-installer-${{ steps.get_version.outputs.TAG }}
-          git archive --format tar HEAD | tar x -C jumpserver-installer-${{ steps.get_version.outputs.TAG }}
-          tar -czf build/jumpserver-installer-${{ steps.get_version.outputs.TAG }}.tar.gz jumpserver-installer-${{ steps.get_version.outputs.TAG }}
+          NAME="${{ steps.get_version.outputs.REPO_NAME }}-${{ steps.get_version.outputs.TAG }}"
+          mkdir -p build "$NAME"
+          git archive --format tar HEAD | tar x -C "$NAME"
+          tar -czf "build/${NAME}.tar.gz" "$NAME"
           cd build
-          md5sum jumpserver-installer-${{ steps.get_version.outputs.TAG }}.tar.gz > jumpserver-installer-${{ steps.get_version.outputs.TAG }}.tar.gz.md5
+          md5sum "${NAME}.tar.gz" > "${NAME}.tar.gz.md5"
           
       - name: Release Upload Assets
         run: |

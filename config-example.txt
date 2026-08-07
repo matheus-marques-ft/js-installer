@@ -5,6 +5,12 @@
 
 ################################# Image Configuration #################################
 #
+# Registry/namespace prefix for every component image (core, koko, lion, luna, lina, chen, web, etc),
+# used as ${NAMESPACE:-jumpserver}/<component>:${VERSION} in compose/*.yml.
+# Point this at your own registry namespace instead of the official "jumpserver" Docker Hub org.
+#
+NAMESPACE=ghcr.io/matheus-marques-ft
+
 # The connection to docker.io in China will timeout or the download speed will be slow, enable this option to use Huawei Cloud image acceleration
 # Replace the old version DOCKER_IMAGE_PREFIX
 #
@@ -165,11 +171,9 @@ CURRENT_VERSION=
 
 ################################# Vault Configuration #################################
 # OpenBao runs as an independent Docker service in this installer. JumpServer connects to OpenBao Server directly.
-# OpenBao 作为独立 Docker 服务部署，JumpServer 直接访问 OpenBao Server。
 #
 # Disabled by default. Set to true to enable Vault storage. When the backend is
 # openbao and OPENBAO_EXTERNAL=false, the installer starts the built-in service.
-# 默认关闭；设为 true 后启用 Vault。当后端为 openbao 且 OPENBAO_EXTERNAL=false 时，安装器启动内置服务。
 VAULT_ENABLED=false
 VAULT_BACKEND=openbao
 VAULT_OPENBAO_ADDR=http://openbao:8200
@@ -178,7 +182,6 @@ VAULT_OPENBAO_TOKEN=
 VAULT_OPENBAO_TIMEOUT=10
 
 # Set to true when VAULT_OPENBAO_ADDR points to an external OpenBao cluster or HA endpoint.
-# 设置为 true 时，installer 不会启动内置 OpenBao，Core 仍使用上面的 Vault 配置连接外部服务。
 OPENBAO_EXTERNAL=false
 
 OPENBAO_RAFT_NODE_ID=openbao
