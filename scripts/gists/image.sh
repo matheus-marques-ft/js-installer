@@ -14,22 +14,22 @@ function get_pull_images() {
 
   for service in ${enabled_services}; do
     if [[ "${service}" == "video" ]]; then
-      image="jumpserver/video-worker:${VERSION}"
+      image="${namespace}/video-worker:${VERSION}"
     elif [[ "${service}" == "" || "${service}" == "celery" ]]; then
       continue
     else
-      image="jumpserver/${service}:${VERSION}"
+      image="${namespace}/${service}:${VERSION}"
     fi
     images+=("${image}")
   done
   if [[ "${use_xpack}" == "1" ]]; then
-    images+=("jumpserver/ansible-executor:latest")
+    images+=("${namespace}/ansible-executor:latest")
   fi
   if should_include_openbao_image; then
     images+=("$(get_openbao_image)")
   fi
   if should_include_kotl_image; then
-    images+=("jumpserver/kotl:${VERSION}")
+    images+=("$(get_kotl_image)")
   fi
   echo "${images[@]}"
 }
