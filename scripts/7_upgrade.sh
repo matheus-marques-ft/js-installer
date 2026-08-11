@@ -260,7 +260,7 @@ function clean_images() {
     return
   fi
 
-  namespace=${NAMESPACE:-jumpserver}
+  namespace=$(get_config_or_env NAMESPACE jumpserver)
   old_images=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "${namespace}/" | grep "${current_version}" || true)
   if [[ -n "${old_images}" ]]; then
     confirm="y"

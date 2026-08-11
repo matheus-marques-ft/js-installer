@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-namespace=${NAMESPACE:-jumpserver}
+namespace=$(get_config_or_env NAMESPACE jumpserver)
 
 function get_db_images() {
   get_db_info "image"
