@@ -51,3 +51,8 @@ jobs:
           gh release upload ${{ steps.get_version.outputs.TAG }} build/* -R $GITHUB_REPOSITORY --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Release
+        run: gh release edit ${{ steps.get_version.outputs.TAG }} --draft=false -R $GITHUB_REPOSITORY
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

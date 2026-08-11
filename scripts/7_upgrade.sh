@@ -10,7 +10,7 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 target=$1
 
 function verify_upgrade_version() {
-  required_version="v3.10.11"
+  required_version="v0.0.1"
   current_version=$(get_config CURRENT_VERSION)
 
   if ! [[ $current_version =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
