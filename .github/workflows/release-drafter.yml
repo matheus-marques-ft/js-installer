@@ -41,6 +41,7 @@ jobs:
           NAME="${{ steps.get_version.outputs.REPO_NAME }}-${{ steps.get_version.outputs.TAG }}"
           mkdir -p build "$NAME"
           git archive --format tar HEAD | tar x -C "$NAME"
+          sed -i "s@^export VERSION=.*@export VERSION=${{ steps.get_version.outputs.TAG }}@" "$NAME/static.env"
           tar -czf "build/${NAME}.tar.gz" "$NAME"
           cd build
           md5sum "${NAME}.tar.gz" > "${NAME}.tar.gz.md5"
