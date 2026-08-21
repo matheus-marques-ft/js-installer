@@ -45,6 +45,12 @@ BOOTSTRAP_TOKEN=
 #
 LOG_LEVEL=ERROR
 
+# Restrict the language switcher (login page, profile settings) to only these codes,
+# comma-separated (see apps/common/const/choices.py's Language enum for valid codes).
+# Empty/unset falls back to every language JumpServer ships.
+#
+LANGUAGES_SUPPORTED=en,pt-br,es
+
 # The network segment used by the JumpServer container, please do not conflict with the existing network, modify according to the actual situation
 #
 DOCKER_SUBNET=192.168.250.0/24
