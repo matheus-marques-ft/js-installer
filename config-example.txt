@@ -45,6 +45,14 @@ BOOTSTRAP_TOKEN=
 #
 LOG_LEVEL=ERROR
 
+# Raises Ansible verbosity to max (10) for every automation task (gather facts, ping,
+# push/change account secret, deploy, etc), so the task's own log/download in the UI
+# includes the real module stderr/traceback instead of a generic "MODULE FAILURE" summary.
+# Useful while testing/debugging this fork; consider disabling on a stable/production
+# deployment since it's noisier and slightly slower per task.
+#
+DEBUG_ANSIBLE=true
+
 # Restrict the language switcher (login page, profile settings) to only these codes,
 # comma-separated (see apps/common/const/choices.py's Language enum for valid codes).
 # Empty/unset falls back to every language JumpServer ships.
