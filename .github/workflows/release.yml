@@ -72,3 +72,66 @@ jobs:
               || echo "  WARNING: could not tag ${repo} with ${NEW_TAG}"
           done
 
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: get_version
+        run: |
+          TAG=$(basename ${GITHUB_REF})
+          REPO_NAME=$(basename ${GITHUB_REPOSITORY})
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config-name: release-config.yml
+          version: ${{ steps.get_version.outputs.TAG }}
+          tag: ${{ steps.get_version.outputs.TAG }}
+          disable-releaser: true
+
+      - name: Create Upload Assets
+        run: |
+          NAME="${{ steps.get_version.outputs.REPO_NAME }}-${{ steps.get_version.outputs.TAG }}"
+          mkdir -p build "$NAME"
+          git archive --format tar HEAD | tar x -C "$NAME"
+          sed -i "s@^export VERSION=.*@export VERSION=${{ steps.get_version.outputs.TAG }}@" "$NAME/static.env"
+          tar -czf "build/${NAME}.tar.gz" "$NAME"
+          cd build
+          md5sum "${NAME}.tar.gz" > "${NAME}.tar.gz.md5"
+
+      - name: Clean up any existing release for this tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.get_version.outputs.TAG }}"
+          gh api "repos/${{ github.repository }}/releases?per_page=100" --jq \
+            ".[] | select(.tag_name == \"${TAG}\") | .id" \
+          | while read -r id; do
+              gh api -X DELETE "repos/${{ github.repository }}/releases/${id}" && echo "Deleted existing release ${id} for ${TAG}"
+            done
+
+      - name: Release Upload Assets
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: false
+          prerelease: ${{ !endsWith(steps.get_version.outputs.TAG, '-stable') }}
+          make_latest: ${{ endsWith(steps.get_version.outputs.TAG, '-stable') }}
+          name: ${{ steps.get_version.outputs.TAG }}
+          body: ${{ steps.create_release.outputs.body }}
+          files: |
+            build/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
