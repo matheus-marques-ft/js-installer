@@ -19,6 +19,14 @@ function copy_docker() {
   \cp -f "${BASE_DIR}/docker/docker.service" /etc/systemd/system/
 }
 
+function docker_installed_completely() {
+  local bin
+  for bin in docker dockerd containerd runc; do
+    [[ -f "/usr/local/bin/${bin}" ]] || return 1
+  done
+  [[ -f "/etc/systemd/system/docker.service" ]] || return 1
+}
+
 function install_docker() {
   if [[ ! -f ${BASE_DIR}/docker/docker.tar.gz ]]; then
     prepare_docker_bin
@@ -27,7 +35,12 @@ function install_docker() {
     echo_red "Error: $(gettext 'Docker program does not exist')"
     exit 1
   fi
-  if [[ ! -f "/usr/local/bin/dockerd" ]]; then
+  # Checking only for dockerd used to be enough, but it made a partial/interrupted
+  # extraction (e.g. a network blip on a freshly booted instance) look "already
+  # installed" on the next run - copy_docker got skipped forever, leaving `docker`
+  # and docker.service missing with no automatic way to recover. Check everything
+  # copy_docker actually produces instead of just one file.
+  if ! docker_installed_completely; then
     copy_docker
   fi
 }
