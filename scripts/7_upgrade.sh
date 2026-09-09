@@ -378,8 +378,6 @@ function main() {
     exit 1
   }
 
-  installation_log "upgrade"
-
   echo_yellow "\n8. $(gettext 'Upgrade successfully. You can now restart the program')"
   echo "cd ${PROJECT_DIR}"
   echo "./jmsctl.sh start"

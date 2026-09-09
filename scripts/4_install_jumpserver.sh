@@ -125,7 +125,6 @@ function main() {
     exit 1
   }
  
-  installation_log "install"
   post_install
 }
 
