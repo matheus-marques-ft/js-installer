@@ -28,6 +28,17 @@ NAMESPACE=ghcr.io/matheus-marques-ft
 #
 VOLUME_DIR=/data/jumpserver
 
+################################# AWS Secrets Manager #################################
+# When enabled, ./jmsctl.sh install/start/restart/upgrade/reconfig read the JSON secret below
+# and overwrite BOOTSTRAP_TOKEN, SECRET_KEY, DB_HOST, DB_USER, DB_PASSWORD and DB_NAME in this file.
+# Requires aws CLI + jq on the host and IAM permission secretsmanager:GetSecretValue
+# (credentials from the EC2 instance role or the default AWS CLI chain).
+# Secret values must not contain spaces, quotes, $, `, \, # or =.
+#
+AWS_SECRETS_ENABLED=true
+AWS_SECRET_NAME=prod/pam-server
+AWS_SECRET_REGION=us-east-1
+
 # Encryption key, please ensure that SECRET_KEY is consistent with the old environment when migrating, do not use special strings
 # (*) Warning: Keep this value secret.
 # (*) Do not disclose SECRET_KEY to anyone

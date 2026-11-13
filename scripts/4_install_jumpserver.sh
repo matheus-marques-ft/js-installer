@@ -88,6 +88,9 @@ function main() {
   echo_logo
   pre_install
   prepare_config
+  if ! load_aws_secrets; then
+    exit 1
+  fi
   set_current_version
 
   echo_green "\n>>> $(gettext 'Install and Configure Docker')"

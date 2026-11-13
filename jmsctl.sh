@@ -236,6 +236,14 @@ function main() {
     pre_check || return 3
     EXE=$(get_docker_compose_cmd_line)
   fi
+
+  # Refresh secrets from AWS Secrets Manager into config.txt before any action
+  # that starts containers or talks to the database.
+  case "${action}" in
+  reconfig|start|restart|upgrade|migrate_db|init_db)
+    load_aws_secrets || return 1
+    ;;
+  esac
   case "${action}" in
   install)
     bash "${SCRIPT_DIR}/4_install_jumpserver.sh"
