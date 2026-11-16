@@ -169,6 +169,11 @@ DOMAINS=
 #
 JUMPSERVER_ENABLE_FONT_SMOOTHING=true
 
+# Lion allows the RDP drive (file upload/download) for RemoteApp (applet) sessions.
+# Set to false to block upload/download for RemoteApp sessions.
+#
+JUMPSERVER_REMOTE_APP_UPLOAD_DOWNLOAD_ENABLE=true
+
 ################################# XPack Configuration #################################
 # XPack package, invalid setting in open source version
 #
